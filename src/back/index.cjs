@@ -9,7 +9,10 @@ const path = require('path');
 const app = express();
 const port = 3001;
 
-mongoose.connect('mongodb+srv://jojo:101010@cluster0.sqrtk3u.mongodb.net/products?retryWrites=true&w=majority&appName=Cluster0')
+require('dotenv').config();
+const mongoUri = process.env.MONGO_URI;
+
+mongoose.connect(mongoUri)
   .then(() => {
     console.log('MongoDB connected successfully');
   })
@@ -112,6 +115,20 @@ app.post('/addproducts', async (req, res) => {
     res.status(201).send(product);
   } catch (error) {
     res.status(400).send(error);
+  }
+});
+
+app.delete('/products/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const product = await Product.findOneAndDelete({ id: id });
+    if (product) {
+      res.status(200).send({ message: `Product ${id} deleted successfully` });
+    } else {
+      res.status(404).send({ message: `Product ${id} not found` });
+    }
+  } catch (error) {
+    res.status(500).send({ message: 'Error deleting product', error });
   }
 });
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import styles from "./index.module.scss";
 
 interface Product {
   id: number;
@@ -26,13 +27,15 @@ const ImageGallery: React.FC = () => {
   }, []);
 
   return (
-    <div>
+    <div className={styles.adminPanel}>
       {products.map((product) => (
-        <div key={product.id}>
+        <div key={product.id} className={styles.productCard}>
           <h2>{product.name}</h2>
           <img src={product.image} alt={product.name} />
-          <p>{product.category}</p>
-          <p>{product.price}</p>
+          <div className={styles.productDetails}>
+            <p>{product.category}</p>
+            <p className={styles.price}>${product.price}</p>
+          </div>
         </div>
       ))}
     </div>

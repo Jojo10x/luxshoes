@@ -3,7 +3,7 @@ import styles from "./index.module.scss";
 import ProductCard from "../../components/components/ProductCard";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { getCategory, getProducts } from "../../features/product/productSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { navData } from "../../data/navItems";
 import Spinner from "../../components/components/Spinner";
 import GoToTop from "../../components/components/GoToTop";
@@ -11,13 +11,24 @@ import Button from "../../components/components/Button";
 import { MdArrowBack } from "react-icons/md";
 import { ROUTES } from "../../constants/Route";
 import {testProducts} from '../../Testing/index'
+import axios from "axios";
 
+interface Product {
+  id: number;
+  name: string;
+  category: string;
+  image: string;
+  price: number;
+}
 const Catalog = () => {
   let { id } = useParams();
-  const { products, isLoading } = useAppSelector((state) => state.product);
+  const {isLoading } = useAppSelector((state) => state.product);
+  const [products, setProducts] = useState<Product[]>([]);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  
 
   useEffect(() => {
     if (!id) {
@@ -42,6 +53,21 @@ const Catalog = () => {
     }
   }, [id]);
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/products");
+        setProducts(response.data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+
+
   const convertedString = id
     ?.split("-")
     ?.map((word) => word?.charAt(0)?.toUpperCase() + word?.slice(1))
@@ -49,15 +75,18 @@ const Catalog = () => {
 
   if (isLoading) return <Spinner />;
 
+
   const filteredProducts = id === 'Loafers'
-  ? testProducts.filter(product => product.category.toLowerCase() === 'loafers')
-  : id === 'Trainers'
-  ? testProducts.filter(product => product.category.toLowerCase() === 'trainers')
-  : id === 'Brogues'
-  ? testProducts.filter(product => product.category.toLowerCase() === 'brogues')
-  : id === 'Boots'
-  ? testProducts.filter(product => product.category.toLowerCase() === 'boots')
-  : testProducts;
+    ? products.filter(product => product.category.toLowerCase() === 'loafers')
+    : id === 'Trainers'
+    ? products.filter(product => product.category.toLowerCase() === 'trainers')
+    : id === 'Brogues'
+    ? products.filter(product => product.category.toLowerCase() === 'brogues')
+    : id === 'Boots'
+    ? products.filter(product => product.category.toLowerCase() === 'boots')
+    : products;
+
+ 
 
   return (
     <div className={`${styles.container} main-container`}>
@@ -68,18 +97,20 @@ const Catalog = () => {
         <div className={styles.title}>{convertedString}</div>
       </div>
       <div className={styles.productList}>
-        {filteredProducts?.map((product, index) => {
-          return (
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
             <ProductCard
               id={product.id}
-              key={index}
+              key={product.id}
               price={product.price}
-              title={product.productName}
+              title={product.name}
               category={product.category}
-              image={product.imgUrl}
+              image={product.image}
             />
-          );
-        })}
+          ))
+        ) : (
+          <p>No products available</p>
+        )}
       </div>
       <GoToTop />
     </div>
