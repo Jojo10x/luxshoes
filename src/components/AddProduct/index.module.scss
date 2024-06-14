@@ -1,0 +1,45 @@
+
+.productForm {
+    display: grid;
+    gap: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+
+    .productForm input[type="file"],
+    .productForm input[type="text"],
+    .productForm button {
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease-in-out;
+    }
+    
+    .productForm input[type="file"]:hover,
+    .productForm input[type="text"]:hover,
+    .productForm button:hover {
+      border-color: #666;
+    }
+    
+    .productForm button {
+      background-color: #00c853;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+    }
+    
+    .productForm button:hover {
+      background-color: #009624;
+    }
+    
+    .productForm img {
+      display: block;
+      max-width: 100%;
+      margin-top: 10px;
+      border-radius: 4px;
+    }
+    
+  }
+  

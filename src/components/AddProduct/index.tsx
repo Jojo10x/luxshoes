@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import styles from "./index.module.scss";
 
 const ImageUpload: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -45,15 +46,15 @@ const ImageUpload: React.FC = () => {
   };
 
   return (
-    <div>
-      <input type="file" onChange={handleFileChange} />
-      <input type="text" name="id" placeholder="ID" onChange={handleInputChange} />
-      <input type="text" name="name" placeholder="Name" onChange={handleInputChange} />
-      <input type="text" name="category" placeholder="Category" onChange={handleInputChange} />
-      <input type="text" name="price" placeholder="Price" onChange={handleInputChange} />
-      <button onClick={handleUpload}>Upload</button>
-      {imageUrl && <img src={imageUrl} alt="Uploaded" />}
-    </div>
+    <div className={styles.productForm}>
+    <input type="file" onChange={handleFileChange} />
+    <input type="text" name="id" placeholder="ID" onChange={handleInputChange} />
+    <input type="text" name="name" placeholder="Name" onChange={handleInputChange} />
+    <input type="text" name="category" placeholder="Category" onChange={handleInputChange} />
+    <input type="text" name="price" placeholder="Price" onChange={handleInputChange} />
+    <button onClick={handleUpload}>Upload</button>
+    {imageUrl && <img src={imageUrl} alt="Uploaded" className={styles.uploadedImage} />}
+  </div>
   );
 };
 
