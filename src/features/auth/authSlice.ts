@@ -29,10 +29,13 @@ const initialState: AuthState = {
 };
 
 export const login = createAsyncThunk(
-  'auth/login',
-  async ({ username, password }: { username: string; password: string }, thunkAPI) => {
+  "auth/login",
+  async (_, thunkAPI) => {
     try {
-      const response = await authService.login({ username, password });
+      const response = await authService.login({
+        username: "user",
+        password: "password",
+      });
       return response.token;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
