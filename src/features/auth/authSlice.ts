@@ -1,12 +1,16 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import authService from "./authService";
-import { Login, UserDetails } from "../../types/auth";
-import { STATUS } from "../../constants/Status";
 import { toast } from "react-toastify";
 
+
+interface UserDetails {
+  id: number;
+  name: string;
+  email: string;
+}
 interface AuthState {
   user: UserDetails | null;
-  userId: 0;
+  userId: number;
   token: string;
   isError: boolean;
   isSuccess: boolean;
@@ -25,13 +29,11 @@ const initialState: AuthState = {
 };
 
 export const login = createAsyncThunk(
-  "auth/login",
-  async (user: Login, thunkAPI) => {
+  'auth/login',
+  async ({ username, password }: { username: string; password: string }, thunkAPI) => {
     try {
-      return await authService.login({
-        username: String(user.username),
-        password: String(user.password),
-      });
+      const response = await authService.login({ username, password });
+      return response.token;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -51,7 +53,7 @@ export const getUser = createAsyncThunk(
 
 export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
   try {
-    return await authService.logout();
+     authService.logout();
   } catch (error) {
     return thunkAPI.rejectWithValue(error);
   }
@@ -61,15 +63,15 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    authReset: () => {
-      initialState;
+    authReset: (state) => {
+      Object.assign(state, initialState);
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state: AuthState) => {
         state.isLoading = true;
-        state.status = STATUS.LOADING;
+        state.status = "loading";
       })
       .addCase(
         login.fulfilled,
@@ -78,20 +80,20 @@ export const authSlice = createSlice({
           state.isSuccess = true;
           state.token = action.payload;
           localStorage.setItem("user", JSON.stringify(2));
-          state.status = STATUS.IDLE;
+          state.status = "idle";
           toast.success(state.status);
         }
       )
-      .addCase(login.rejected, (state: AuthState) => {
+      .addCase(login.rejected, (state: AuthState,action) => {
         state.isLoading = false;
         state.isError = true;
         state.user = null;
-        state.status = STATUS.ERROR;
-        toast.error(state.status);
+        state.status = "error";
+        toast.error(action.payload as string)
       })
       .addCase(getUser.pending, (state: AuthState) => {
         state.isLoading = true;
-        state.status = STATUS.LOADING;
+        state.status = "loading";
       })
       .addCase(
         getUser.fulfilled,
@@ -100,22 +102,22 @@ export const authSlice = createSlice({
           state.isSuccess = true;
           state.user = action.payload;
           localStorage.setItem("userDetails", JSON.stringify(action.payload));
-          state.status = STATUS.IDLE;
+          state.status ="idle";
           toast.success(state.status);
         }
       )
-      .addCase(getUser.rejected, (state: AuthState) => {
+      .addCase(getUser.rejected, (state: AuthState,action) => {
         state.isLoading = false;
         state.isError = true;
         state.user = null;
-        state.status = STATUS.ERROR;
-        toast.error(state.status);
+        state.status = "erorr";
+        toast.error(action.payload as string)
       })
       .addCase(logout.fulfilled, (state: AuthState) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.user = null;
-        state.status = STATUS.IDLE;
+        state.status = "idle";
       });
   },
 });

@@ -1,7 +1,7 @@
 import styles from "./index.module.scss";
 import { useNavigate } from "react-router";
 import { FormEvent, useEffect } from "react";
-import { getUser, login, logout } from "../../features/auth/authSlice";
+import { getUser, login, } from "../../features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import Spinner from "../../components/components/Spinner";
 
@@ -11,8 +11,8 @@ const LoginPage = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (user === null && token) {
-      const userId = localStorage.getItem("user");
+    const userId = localStorage.getItem("user");
+    if (userId && !user) {
       dispatch(getUser(Number(userId)));
     }
   }, [token, user, dispatch]);
@@ -24,16 +24,11 @@ const LoginPage = () => {
     const username = data.get("username") as string;
     const password = data.get("password") as string;
 
-    await dispatch(login({ username, password }));
-    if (user && token) {
-      navigate("/");
-      console.log(user);
+    const resultAction = await dispatch(login({ username, password }));
+    
+    if (login.fulfilled.match(resultAction)) {
+      navigate("/admin");
     }
-  };
-
-  const logoutHandler = async () => {
-    await dispatch(logout());
-    navigate("/");
   };
 
   if (isLoading) return <Spinner />;
@@ -41,33 +36,6 @@ const LoginPage = () => {
   return (
     <section className={styles.section}>
       <div className={`${styles.container} main-container`}>
-        {user !== null ? (
-          <div className={styles.profile}>
-            <div className={styles.profileHeader}>
-              <div className={styles.profileInfo}>
-                <span className={styles.name}>
-                  Name: {`${user?.name.firstname} ${user?.name.lastname}`}
-                </span>
-                <span>
-                  Email: <strong>{user?.email}</strong>
-                </span>
-                <span>
-                  Location: <strong>{user?.address.city}</strong>
-                </span>
-                <span>
-                  Phone: <strong>{user?.address.number}</strong>
-                </span>
-              </div>
-            </div>
-            <button
-              type="button"
-              className={styles.logoutBtn}
-              onClick={() => logoutHandler()}
-            >
-              Logout
-            </button>
-          </div>
-        ) : (
           <div className={styles.loginContainer}>
             <h2>Login</h2>
             <form action="/login" onSubmit={formSubmitHandler}>
@@ -76,7 +44,7 @@ const LoginPage = () => {
                   <input type="text" name="username" placeholder="Username:" />
                 </div>
                 <p className={styles.apiSignExample}>
-                  demo username: <strong>mor_2314</strong>
+                  admin: <strong>admin</strong>
                 </p>
               </div>
               <div className={styles.formItem}>
@@ -88,7 +56,7 @@ const LoginPage = () => {
                   />
                 </div>
                 <p className={styles.apiSignExample}>
-                  demo password: <strong>83r5^_</strong>
+                  password <strong>password</strong>
                 </p>
               </div>
               <div className={styles.formSubmit}>
@@ -96,7 +64,6 @@ const LoginPage = () => {
               </div>
             </form>
           </div>
-        )}
       </div>
     </section>
   );

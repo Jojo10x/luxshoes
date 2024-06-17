@@ -1,20 +1,27 @@
-import axiosConfig from "../../app/axiosConfig";
-import { Login } from "../../types/auth";
 
+interface Login {
+  username: string;
+  password: string;
+}
 const login = async (userData: Login) => {
-  const response = await axiosConfig.post("auth/login", userData);
-
-  return response.data;
+  const { username, password } = userData;
+  if (username === "user" && password === "password") {
+    const fakeToken = "fake-jwt-token";
+    localStorage.setItem("user", JSON.stringify(fakeToken));
+    return { token: fakeToken };
+  } else {
+    throw new Error("Unauthorized");
+  }
 };
 
 const getUser = async (userId: number) => {
-  const response = await axiosConfig.get(`users/${userId}`);
-
-  if (response.data) {
-    localStorage.setItem("userDetails", JSON.stringify(response.data));
-  }
-
-  return response.data;
+  const userDetails = {
+    id: userId,
+    name: "John Doe",
+    email: "john.doe@example.com",
+  };
+  localStorage.setItem("userDetails", JSON.stringify(userDetails));
+  return userDetails;
 };
 
 const logout = () => {
