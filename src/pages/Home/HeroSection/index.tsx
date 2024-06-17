@@ -10,15 +10,6 @@ import Slider from "../Slider";
 
 const HeroSection = () => {
 
-  useEffect(() => {
-    console.log('HeroSection component rendered');
-  }, []);
-
-  // Log heroImages content
-  useEffect(() => {
-    console.log('heroImages:', heroImages);
-  }, [heroImages]);
-
   return (
     <section className={styles.section}>
       <div className={`${styles.container} main-container`}>
