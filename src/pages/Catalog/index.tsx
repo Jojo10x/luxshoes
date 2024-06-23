@@ -10,7 +10,6 @@ import GoToTop from "../../components/components/GoToTop";
 import Button from "../../components/components/Button";
 import { MdArrowBack } from "react-icons/md";
 import { ROUTES } from "../../constants/Route";
-import {testProducts} from '../../Testing/index'
 import axios from "axios";
 
 interface Product {

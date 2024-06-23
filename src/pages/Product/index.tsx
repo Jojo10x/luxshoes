@@ -9,15 +9,36 @@ import { addToCart } from "../../features/cart/cartSlice";
 import { CartItem } from "../../types/cart";
 import GoToTop from "../../components/components/GoToTop";
 import Spinner from "../../components/components/Spinner";
-import {testProducts} from '../../Testing/index'
+import axios from "axios";
 
+interface Product {
+  id: number;
+  name: string;
+  category: string;
+  image: string;
+  price: number;
+}
 const Product = () => {
   const { isLoading } = useAppSelector((state) => state.product);
   const dispatch = useAppDispatch();
   const { id } = useParams();
 
   const [isLoadingProduct, setIsLoadingProduct] = useState(false);
-  const selectedProduct = testProducts.find(item => item.id === Number(id));
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/products");
+        setProducts(response.data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+  const selectedProduct = products.find(item => item.id === Number(id));
   const addToCartHandler = () => {
     setIsLoadingProduct(true);
    
@@ -32,9 +53,9 @@ const Product = () => {
       quantity: 1,
       product: {
         id: selectedProduct.id,
-        title: selectedProduct.productName,
+        title: selectedProduct.name,
         price: selectedProduct.price,
-        image: selectedProduct.imgUrl,
+        image: selectedProduct.image,
         // description: product.description,
         category: selectedProduct.category,
       },
@@ -72,11 +93,11 @@ const Product = () => {
         </p>
         <div className={styles.productContainer}>
           <div className={styles.productImageContainer}>
-            <img src={ selectedProduct?.imgUrl} className={styles.image}></img>
+            <img src={ selectedProduct?.image} className={styles.image}></img>
           </div>
           <div className={styles.productDetailsContainer}>
             <div className={styles.titleContainer}>
-            <div className={styles.title}>{selectedProduct?.productName}</div>
+            <div className={styles.title}>{selectedProduct?.name}</div>
 
               {/* <div className={styles.subHeading}>{product.description}</div> */}
             </div>
