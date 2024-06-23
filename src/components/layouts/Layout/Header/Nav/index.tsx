@@ -48,7 +48,7 @@ const Navbar: React.FC<NavBarProps> = ({ handleShow }) => {
     <nav className={navStyles}>
       <div className={styles.container_bottom}>
         <Link to="/" className={styles.title}>
-        Lux Shoes
+          Lux Shoes
         </Link>
         <ul className={styles.links}>
           {navData.map((option) => {
@@ -73,7 +73,8 @@ const Navbar: React.FC<NavBarProps> = ({ handleShow }) => {
             </div>
           </li>
           <li>
-            <NavLink to={`/login`} className={styles.link}>
+            <NavLink to={`#`} className={styles.link}>
+              {/* <NavLink to={`/login`} className={styles.link}> */}
               <RiUserLine />
             </NavLink>
           </li>
