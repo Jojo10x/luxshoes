@@ -10,16 +10,35 @@ import ProductCard from "../../../components/components/ProductCard";
 import { navData } from "../../../data/navItems";
 import { MdArrowRightAlt } from "react-icons/md";
 import { Link } from "react-router-dom";
-import {testProducts} from '../../../Testing/index'
+import axios from "axios";
 
+interface Product {
+  id: number;
+  name: string;
+  category: string;
+  image: string;
+  price: number;
+}
 const QuickView = () => {
   const dispatch = useAppDispatch();
 
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    dispatch(getProducts());
-  }, [dispatch]);
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/products");
+        setProducts(response.data);
+        setFilteredProducts(response.data);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const handleCategory = (
     e: React.MouseEvent<HTMLInputElement, MouseEvent>
@@ -28,19 +47,22 @@ const QuickView = () => {
 
     setSelectedCategory(target.id);
 
+
     if (target.value !== "all") {
       const normalizedValue = target.value.trim().toLowerCase();
-      const pathUrl = testProducts.filter((item) => {
+      const pathUrl = products.filter((item) => {
         const normalizedCategory = item.category.trim().toLowerCase();
         return normalizedCategory === normalizedValue;
       });
 
       if (pathUrl.length > 0) {
+        setFilteredProducts(filteredProducts);
         dispatch(getCategory(normalizedValue));
       } else {
         console.warn(`No matching category found for value: ${target.value}`);
       }
     } else {
+      setFilteredProducts(products);
       dispatch(getProducts());
     }
   };
@@ -79,18 +101,20 @@ const QuickView = () => {
           </Link>
         </div>
         <div className={styles.productList}>
-          {testProducts.slice(0, 8)?.map((product, index) => {
-            return (
-              <ProductCard
-                id={product.id}
-                key={index}
-                title={product.productName}
-                price={product.price}
-                category={product.category}
-                image={product.imgUrl}
-              />
-            );
-          })}
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
+            <ProductCard
+              id={product.id}
+              key={product.id}
+              price={product.price}
+              title={product.name}
+              category={product.category}
+              image={product.image}
+            />
+          ))
+        ) : (
+          <p>No products available</p>
+        )}
         </div>
       </div>
     </section>
