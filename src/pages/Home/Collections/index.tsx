@@ -11,9 +11,10 @@ const Collections = () => {
         <p className={styles.section_title_top}>Collections</p>
         <div className={styles.productList}>
           <div className={styles.collectionContainer}>
-            {collectionImages.map((item, id) => {
-              return (
-                <Link to={item.link} className={styles["div" + (id + 1)]}>
+          {collectionImages
+              .filter((item) => item.link) 
+              .map((item, id) => (
+                <Link key={id} to={item.link!} className={styles["div" + (id + 1)]}>
                   <img
                     srcSet={item.path}
                     className={`${styles.image}`}
@@ -21,17 +22,16 @@ const Collections = () => {
                   />
                   <motion.div
                     key="cart"
-                    whileHover={{ zoom: 1.5 }}
+                    whileHover={{ scale: 1.05 }}
                     style={{ height: "100%" }}
                   >
-                    <Link to={item.link} className={styles.iconCcontainer}>
+                    <Link to={item.link!} className={styles.iconCcontainer}>
                       <MdArrowOutward className={styles.icon} />
                     </Link>
                   </motion.div>
                   <div className={styles.title}>{item.name}</div>
                 </Link>
-              );
-            })}
+              ))}
           </div>
         </div>
       </div>

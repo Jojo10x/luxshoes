@@ -20,11 +20,11 @@ const LoginPage = () => {
   const formSubmitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const data = new FormData(e.currentTarget);
-    const username = data.get("username") as string;
-    const password = data.get("password") as string;
+    // const data = new FormData(e.currentTarget);
+    // const username = data.get("username") as string;
+    // const password = data.get("password") as string;
 
-    const resultAction = await dispatch(login({ username, password }));
+    const resultAction = await dispatch(login());
     
     if (login.fulfilled.match(resultAction)) {
       navigate("/admin");

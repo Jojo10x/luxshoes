@@ -1,11 +1,9 @@
 import styles from "./index.module.scss";
 import Button from "../../../components/components/Button";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
-import { heroImages } from "../../../data/images";
-import { useEffect } from "react";
 import Slider from "../Slider";
 
 const HeroSection = () => {
