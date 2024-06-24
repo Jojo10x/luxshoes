@@ -136,16 +136,21 @@ app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
-const allowedOrigins = ['http://localhost:3001', 'https://luxshoes.netlify.app'];
+const allowedOrigins = ['http://localhost:3000', 'https://luxshoes.netlify.app'];
+
 app.use(cors({
   origin: (origin, callback) => {
-    if (allowedOrigins.includes(origin)) {
+    console.log('Request Origin:', origin);  
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
-  }
+  },
+  credentials: true
 }));
+
+
 
 const options = {
   key: fs.readFileSync('localhost-key.pem'),
@@ -167,4 +172,3 @@ axios.get(`${baseURL}/products`)
   .catch(error => {
     console.error(error);
   });
-  
