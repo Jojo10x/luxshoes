@@ -135,3 +135,36 @@ app.delete('/products/:id', async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
+const allowedOrigins = ['http://localhost:3001', 'https://luxshoes.netlify.app'];
+app.use(cors({
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
+
+const options = {
+  key: fs.readFileSync('localhost-key.pem'),
+  cert: fs.readFileSync('localhost.pem')
+};
+
+https.createServer(options, app).listen(3001, () => {
+  console.log('HTTPS Server running on port 3001');
+});
+
+const baseURL = process.env.NODE_ENV === 'production'
+  ? process.env.API_URL
+  : 'http://localhost:3001';
+
+axios.get(`${baseURL}/products`)
+  .then(response => {
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.error(error);
+  });
+  
