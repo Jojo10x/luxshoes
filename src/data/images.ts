@@ -46,6 +46,7 @@ export const collectionImages = [
   {
     id: 4,
     path: brogues,
+    link: "/catalog/Brogues",
     name: "Brogues",
   },
   {
