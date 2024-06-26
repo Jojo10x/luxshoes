@@ -14,12 +14,14 @@ const Collections = () => {
           {collectionImages
               .filter((item) => item.link) 
               .map((item, id) => (
-                <Link key={id} to={item.link!} className={styles["div" + (id + 1)]}>
-                  <img
-                    srcSet={item.path}
-                    className={`${styles.image}`}
-                    loading="lazy"
-                  />
+                <div key={id} className={styles["div" + (id + 1)]}>
+                  <Link to={item.link!}>
+                    <img
+                      srcSet={item.path}
+                      className={`${styles.image}`}
+                      loading="lazy"
+                    />
+                  </Link>
                   <motion.div
                     key="cart"
                     whileHover={{ scale: 1.05 }}
@@ -30,7 +32,7 @@ const Collections = () => {
                     </Link>
                   </motion.div>
                   <div className={styles.title}>{item.name}</div>
-                </Link>
+                </div>
               ))}
           </div>
         </div>
