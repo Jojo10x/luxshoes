@@ -75,7 +75,7 @@ const QuickView = () => {
           <div className={styles.buttonContainer}>
             {navData?.map((item) => {
               return (
-                <div className={styles.button}>
+                <div className={styles.button} key={item.name}>
                   <input
                     type="radio"
                     id={item.name}
@@ -106,6 +106,7 @@ const QuickView = () => {
             <ProductCard
               id={product.id}
               key={product.id}
+              cardKey={product.id}
               price={product.price}
               title={product.name}
               category={product.category}

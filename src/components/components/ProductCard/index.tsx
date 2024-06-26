@@ -11,13 +11,13 @@ import Button from "../Button";
 import Spinner from "../Spinner";
 
 interface ProductCardProps extends Product {
-  key: number;
+  cardKey: number;
   
 }
 
 const ProductCard: FC<ProductCardProps> = ({
   id,
-  key,
+  cardKey,
   title,
   price,
   category,
@@ -56,7 +56,7 @@ const ProductCard: FC<ProductCardProps> = ({
   return (
     <motion.div
       id={title}
-      key={key}
+      key={cardKey}
       tabIndex={id}
       whileHover={{ cursor: "pointer" }}
       // onMouseEnter={() => showActionIcons(true)}
@@ -87,7 +87,7 @@ const ProductCard: FC<ProductCardProps> = ({
           </div>
         </Link>
         <motion.div
-          key={key}
+          key={cardKey}
           whileHover={{ zoom: 1.2 }}
           style={{ height: "100%" }}
           onClick={() => addToCartHandler()}

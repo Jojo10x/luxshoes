@@ -53,8 +53,8 @@ const Navbar: React.FC<NavBarProps> = ({ handleShow }) => {
         <ul className={styles.links}>
           {navData.map((option) => {
             return (
-              <li>
-                <NavLink to={`/catalog/${option.name}`} className={styles.link}>
+              <li key={option.name}>
+                <NavLink to={`/catalog/${option.name}`} className={styles.link} >
                   {option.name}
                 </NavLink>
               </li>
