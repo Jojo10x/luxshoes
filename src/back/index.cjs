@@ -1,6 +1,5 @@
 // mongodb+srv://jojo:<password>@cluster0.sqrtk3u.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 const express = require('express');
-const connectDB = require('./db.cjs');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const multer = require('multer');
@@ -20,7 +19,25 @@ mongoose.connect(mongoUri)
     console.error('MongoDB connection error:', error);
   });
 
-app.use(cors());
+// CORS configuration
+const allowedOrigins = ['http://localhost:5173', 'https://luxshoes.netlify.app'];
+app.use(cors({
+  origin: (origin, callback) => {
+    console.log('Request Origin:', origin);  
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
 app.use(express.json());
 app.use('/images', express.static('uploads/images'));
 
@@ -74,7 +91,7 @@ app.post('/upload', upload.single('product'), (req, res) => {
   try {
     res.json({
       success: 1,
-      img_url: `http://localhost:${port}/images/${req.file.filename}`,
+      img_url: `https://localhost:${port}/images/${req.file.filename}`,
     });
   } catch (error) {
     console.error('Error uploading image:', error);
@@ -133,10 +150,8 @@ app.delete('/products/:id', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on https://localhost:${port}`);
 });
-
-const allowedOrigins = ['http://localhost:3000', 'https://luxshoes.netlify.app'];
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -151,24 +166,3 @@ app.use(cors({
 }));
 
 
-
-const options = {
-  key: fs.readFileSync('localhost-key.pem'),
-  cert: fs.readFileSync('localhost.pem')
-};
-
-https.createServer(options, app).listen(3001, () => {
-  console.log('HTTPS Server running on port 3001');
-});
-
-const baseURL = process.env.NODE_ENV === 'production'
-  ? process.env.API_URL
-  : 'http://localhost:3001';
-
-axios.get(`${baseURL}/products`)
-  .then(response => {
-    console.log(response.data);
-  })
-  .catch(error => {
-    console.error(error);
-  });

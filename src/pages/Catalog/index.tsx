@@ -99,6 +99,7 @@ const Catalog = () => {
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <ProductCard
+            cardKey={product.id}
               id={product.id}
               key={product.id}
               price={product.price}
