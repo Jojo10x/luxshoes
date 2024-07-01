@@ -1,6 +1,6 @@
 import axios from "axios";
 const axiosConfig = axios.create({
-  baseURL: "https://fakestoreapi.com/",
+  baseURL: "https://luxshoes.netlify.app",
 });
 
 export default axiosConfig;

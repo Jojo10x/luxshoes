@@ -20,7 +20,7 @@ mongoose.connect(mongoUri)
   });
 
 // CORS configuration
-const allowedOrigins = ['http://localhost:5173', 'https://luxshoes.netlify.app'];
+const allowedOrigins = ['http://localhost:5173', 'https://luxshoes.netlify.app','http://localhost:3001',];
 app.use(cors({
   origin: (origin, callback) => {
     console.log('Request Origin:', origin);  
