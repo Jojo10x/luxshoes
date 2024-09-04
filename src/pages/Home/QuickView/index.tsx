@@ -10,35 +10,16 @@ import ProductCard from "../../../components/components/ProductCard";
 import { navData } from "../../../data/navItems";
 import { MdArrowRightAlt } from "react-icons/md";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import {testProducts} from '../../../Testing/index'
 
-interface Product {
-  id: number;
-  name: string;
-  category: string;
-  image: string;
-  price: number;
-}
 const QuickView = () => {
   const dispatch = useAppDispatch();
 
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const [products, setProducts] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get("http://localhost:3001/products");
-        setProducts(response.data);
-        setFilteredProducts(response.data);
-      } catch (error) {
-        console.error("Error fetching products", error);
-      }
-    };
-
-    fetchProducts();
-  }, []);
+    dispatch(getProducts());
+  }, [dispatch]);
 
   const handleCategory = (
     e: React.MouseEvent<HTMLInputElement, MouseEvent>
@@ -47,22 +28,19 @@ const QuickView = () => {
 
     setSelectedCategory(target.id);
 
-
     if (target.value !== "all") {
       const normalizedValue = target.value.trim().toLowerCase();
-      const pathUrl = products.filter((item) => {
+      const pathUrl = testProducts.filter((item) => {
         const normalizedCategory = item.category.trim().toLowerCase();
         return normalizedCategory === normalizedValue;
       });
 
       if (pathUrl.length > 0) {
-        setFilteredProducts(filteredProducts);
         dispatch(getCategory(normalizedValue));
       } else {
         console.warn(`No matching category found for value: ${target.value}`);
       }
     } else {
-      setFilteredProducts(products);
       dispatch(getProducts());
     }
   };
@@ -75,7 +53,7 @@ const QuickView = () => {
           <div className={styles.buttonContainer}>
             {navData?.map((item) => {
               return (
-                <div className={styles.button} key={item.name}>
+                <div className={styles.button}>
                   <input
                     type="radio"
                     id={item.name}
@@ -101,21 +79,17 @@ const QuickView = () => {
           </Link>
         </div>
         <div className={styles.productList}>
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((product) => (
-            <ProductCard
-              id={product.id}
-              key={product.id}
-              cardKey={product.id}
-              price={product.price}
-              title={product.name}
-              category={product.category}
-              image={product.image}
-            />
-          ))
-        ) : (
-          <p>No products available</p>
-        )}
+          {testProducts.slice(0, 8)?.map((product, index) => {
+            return (
+              <ProductCard
+                id={product.id}
+                key={index}
+                title={product.productName}
+                price={product.price}
+                category={product.category}
+                image={product.imgUrl} cardKey={product.id}              />
+            );
+          })}
         </div>
       </div>
     </section>
