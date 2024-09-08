@@ -67,8 +67,8 @@ const Footer = () => {
       </div>
       <div className={styles.separator}></div>
       <div className={styles.subTitle}>
-        {currYear} | Lux Shoes. All Rights Reserved. Built by |
-        <a href="https://joelkasisi.netlify.app/"> <span>Joel Kasisi</span></a>
+        {currYear} | Lux Shoes. All Rights Reserved. Powered by
+        <a href="https://pixeltochka.tech/"> <span>PT</span></a>
       </div>
     </footer>
   );
